@@ -1,0 +1,372 @@
+/*grey: #2b2d2f*/
+/*
+white background
+
+box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+			0 10px 10px rgba(0,0,0,0.22);
+
+black background
+
+box-shadow: 0 0px 28px rgba(255,255,255,0.25), 
+            0 0px 10px rgba(255,255,255,0.22);
+*/
+
+
+/* gradient colors :  #FF4B2B, #FF416C
+                      #845ec2, #d65db1, #ff6f91, #ff9671, #ffc75f, #f9f871
+*/
+
+:root {
+    --blue:  #0386bf;
+    --black: #1c1c1c;
+    --grey:  #2b2d2f;
+    --white: #f5f5f5;
+
+    /*
+        ======================
+           Form Card Style
+        ======================
+    */
+
+    --formAnimation: 30s;
+    --formBackgroundColor: #845ec2;
+
+    --webkit-gradient: -webkit-linear-gradient(
+        45deg,
+        #845ec2, 
+        #d65db1, 
+        #ff6f91, 
+        #ff9671, 
+        #ffc861
+    );
+
+    --gradient: linear-gradient(
+        45deg,
+        #845ec2, 
+        #d65db1, 
+        #ff6f91, 
+        #ff9671, 
+        #ffc75f
+    );
+    
+    /*
+        =========================
+           Submit Button Style
+        =========================
+    */
+
+    --submitButtonBackgroundColor: #f5f5f5;
+    --submitButtonColor: #ff6f91;
+
+    --submitButtonWidth:  175px; /*standard: 175px*/
+    --submitButtonHeight: 60px; /*standard: 60px*/
+
+    --progressBarColor: #ced7dd;
+    --progressBarWidth: -50%;
+    --progressBarHeight: 40%;
+
+    --squishAnimation:    500ms;  /*standard: 500ms*/
+    --progressAnimation:  1000ms; /*standard: 1000ms*/
+    --roundifyAnimation:  500ms;  /*standard: 500ms*/
+    --checkmarkAnimation: 600ms;  /*standard: 600ms*/
+
+    --svgContainer: 80px ;
+    --svgSize:      40px;
+
+    --strokeWidth: 4px;
+    --storkeColor: #f5f5f5;
+}
+
+body {
+    background-color: #2b2d2f;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*
+    ===============
+       Form Card
+    ===============
+*/
+
+.formCard {
+    
+    min-width: 100%;
+    min-height: 100%;
+    border-radius: 0px;
+
+    font-family: 'Roboto', 'Trebuchet MS', sans-serif;
+    color: whitesmoke;
+
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+			    0 10px 10px rgba(0,0,0,0.22);
+
+    background: var(--formBackgroundColor);
+    background: var(--webkit-gradient);
+    background: var(--gradient);
+    background-position: 0;
+    background-size: 600%;
+
+    animation: gradientScroll var(--formAnimation) infinite;
+}
+
+h1.formTitle {
+    margin: 7.5vh 0 7.5vh 0;
+    text-align: center;
+} 
+
+form {
+    display: grid;
+    grid-template-columns: 100%;
+    justify-content: center;
+} 
+
+label, input {margin: 0 10vw 2.5vh 10vw;}
+
+label {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+input {
+    height: 20px;
+
+    border: 1px solid grey;
+    border-radius: 10px;
+    outline: none;
+}
+
+input:focus {
+    outline: 1px solid grey;
+}
+
+/*
+    =========================
+       Submit Button Logic
+    =========================
+*/
+
+.submitButtonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.submitButton {
+    display: inline-block;
+    position: relative;
+
+    margin: 7vh 0 3vh 0;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+
+    width: var(--submitButtonWidth);
+    height: var(--submitButtonHeight);
+
+    background-color: var(--submitButtonBackgroundColor); 
+    color: var(--submitButtonColor);
+
+    font-size:   20px;
+    font-weight: bold;
+    text-align:  center;
+
+    cursor: pointer;
+}
+
+.submitButton.animating {
+    background-color: transparent;
+    color: transparent;
+
+    user-select: none;
+    cursor: default; 
+
+    animation: hide 0ms calc(var(--squishAnimation) + var(--progressAnimation)); 
+    animation-fill-mode: forwards;
+}
+
+.submitButton::before {
+    display: none;
+    position: absolute;
+
+    content: "";
+    inset: 0;
+
+    background-color: var(--submitButtonBackgroundColor);
+    border-radius: 4px; 
+
+    animation-name: squish;
+    animation-duration: var(--squishAnimation);
+    animation-timing-function: cubic-bezier(0, 1.38, 0.64, 1.38);
+    animation-fill-mode: forwards;
+}
+
+.submitButton.animating::after {
+    display: none;
+    position: absolute;
+    content: "";
+
+    top: var(--progressBarHeight);
+    bottom: var(--progressBarHeight);
+    left: 101%;
+    right: 101%;
+
+    background-color: var(--progressBarColor);
+    border-radius: 10px;
+
+    animation-name: progress;
+    animation-delay: var(--squishAnimation);
+    animation-duration: var(--progressAnimation);
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out;
+}
+
+.submitButton.animating::before, .submitButton.animating::after {
+    display: inline-block;
+}
+
+.checkmarkContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 7vh 0 3vh 0;
+    width: 0;
+    height: 0;
+
+    background-color: var(--progressBarColor);
+    border-radius: 10px;
+} 
+
+.checkmarkContainer.animating {
+    animation-name: roundify;
+    animation-fill-mode: forwards;
+    animation-duration: var(--roundifyAnimation);
+    animation-delay: calc(var(--squishAnimation) + var(--progressAnimation));
+    animation-timing-function: cubic-bezier(0, 1.38, 0.64, 1.38);
+} 
+
+.checkmarkSvg {
+    width: 0;
+    height: 0;
+
+    stroke: var(--storkeColor);
+    stroke-width: var(--strokeWidth);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.checkmarkSvg.animating {
+    animation-name: checkmark;
+    animation-timing-function: ease-out;
+    animation-duration: var(--checkmarkAnimation);
+    animation-delay: calc( var(--roundifyAnimation) + var(--progressAnimation) + var(--squishAnimation) );
+    animation-fill-mode: forwards;
+}
+
+
+/*
+    ================
+       Animations
+    ================
+*/
+
+@keyframes gradientScroll {
+    0% {background-position: left;}
+    50% {background-position: right;}
+    100% {background-position: left;}
+}
+
+/*
+    ==============================
+       Submit Button Animations
+    ==============================
+*/
+
+
+@keyframes squish {
+    100% {
+        top: var(--progressBarHeight);
+        bottom: var(--progressBarHeight);
+        left: var(--progressBarWidth);
+        right: var(--progressBarWidth);
+        border-radius: 10px;
+    }
+}
+
+@keyframes progress {
+    100% {
+        top: var(--progressBarHeight);
+        bottom: var(--progressBarHeight);
+        left: var(--progressBarWidth);
+        right: var(--progressBarWidth);
+    }
+}
+
+
+@keyframes hide {
+    100% {
+        width: 0;
+        height: 0;
+    }
+}
+
+@keyframes roundify {
+    0% {
+        width: calc(var(--submitButtonWidth) * 2);
+        height: calc(var(--submitButtonHeight) * .2); 
+    }
+    100% {
+        width: var(--svgContainer);
+        height: var(--svgContainer);
+        background-color: var(--submitButtonColor);
+        border-radius: 100%;
+    }
+}
+
+@keyframes checkmark {
+    0% {
+        width: var(--svgSize);
+        height: var(--svgSize);
+
+        stroke-dasharray: 50;
+        stroke-dashoffset: 50;
+    }
+    100% {
+        width: var(--svgSize);
+        height: var(--svgSize);
+
+        stroke-dashoffset: 0;
+    }
+}
+
+/*
+    ===========================
+       Media transformations
+    ===========================
+*/
+
+
+@media screen and (min-width: 800px) {
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .formCard {
+        border-radius: 5px;
+        min-width: 45vw;
+        min-height: 90vh;
+    }
+}
+
+@media screen and (max-width: 800px) and (orientation:landscape) {
+    html, body, .formCard { min-height: 200%;}
+    h1.formTitle { margin: 15vh 0 15vh 0;}
+
+    .submitButtonContainer { margin: 20vh 0 5vh 0;}
+}
